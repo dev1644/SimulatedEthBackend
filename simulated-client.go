@@ -8,17 +8,15 @@ import (
 	"fmt"
 	"log"
 	"math/big"
-	"os"
 	"time"
 
 	ipfs "Go-Assignment/ipfsutils"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 )
 
-func deleteFiles() {
+/* func deleteFiles() {
 
 	err := os.Remove("Contract/Challenge.bin")
 	if err != nil {
@@ -34,8 +32,9 @@ func deleteFiles() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
+} */
 
+// PrintReciept executes a go routine that recieves reciepts via channel and prints them to STDOUT
 func PrintReciept(done chan bool) chan string {
 	ch := make(chan string)
 	go func() {
@@ -54,17 +53,14 @@ func PrintReciept(done chan bool) chan string {
 	return ch
 }
 
+//CheckForReciepts is a helper function that generate reciepts from hashes and store them on IPFS.
 func CheckForReciepts(hashes []common.Hash, reciepts chan string, client *backends.SimulatedBackend, ipfsManager *ipfsutils.IpfsManager) {
 
 	for _, val := range hashes {
-		var reciept *types.Receipt
 
-		for reciept == nil {
-			reciept, _ = client.TransactionReceipt(context.Background(), val)
-			time.Sleep(14 * time.Second)
-		}
-		recieptJson, _ := reciept.MarshalJSON()
-		hash, _ := ipfsManager.DagPut(recieptJson, "json", "cbor")
+		reciept, _ := client.TransactionReceipt(context.Background(), val)
+		recieptJSON, _ := reciept.MarshalJSON()
+		hash, _ := ipfsManager.DagPut(recieptJSON, "json", "cbor")
 		reciepts <- hash
 	}
 
@@ -72,11 +68,6 @@ func CheckForReciepts(hashes []common.Hash, reciepts chan string, client *backen
 }
 
 func main() {
-
-	// client, err := ethclient.Dial("https://ropsten.infura.io")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
 
 	// defer deleteFiles()
 
@@ -96,22 +87,17 @@ func main() {
 		log.Fatal("Having error connecting with IPFS", err)
 	}
 
-	var reciept *types.Receipt
-
-	for reciept == nil {
-		reciept, _ = client.TransactionReceipt(context.Background(), tx.Hash())
-		time.Sleep(14 * time.Second)
-	}
-
 	hashes = append(hashes, tx.Hash())
 	reciepts := PrintReciept(done)
 
 	uintb, _ := challSession.GetB()
 	tx1, _ := challSession.SetB(big.NewInt(1))
+	client.Commit()
 	hashes = append(hashes, tx1.Hash())
 
 	addressa, _ := challSession.GetA()
 	tx2, _ := challSession.SetA()
+	client.Commit()
 	hashes = append(hashes, tx2.Hash())
 	fmt.Println("uint b", uintb)
 	fmt.Println("address a", addressa.Hex())

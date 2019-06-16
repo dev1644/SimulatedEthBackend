@@ -56,6 +56,7 @@ func LoadPrivateKey(privateKey string) *ecdsa.PrivateKey {
 	privateKeyECDSA, err := crypto.HexToECDSA(privateKey)
 	if err != nil {
 		log.Fatal("Invalid Private Key Provided")
+		return nil
 	}
 
 	return privateKeyECDSA

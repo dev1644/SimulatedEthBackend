@@ -38,6 +38,7 @@ func Deploy(privateKey string, client *backends.SimulatedBackend) (*challenge.Ch
 	// auth.GasPrice = big.NewInt(100000000000)
 
 	address, tx, instance, err := challenge.DeployChallenge(auth, client)
+	client.Commit()
 	if err != nil {
 		log.Fatal(err)
 	}

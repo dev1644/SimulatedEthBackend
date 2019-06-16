@@ -69,26 +69,3 @@ func (im *IpfsManager) Cat(cid string) ([]byte, error) {
 func (im *IpfsManager) Stat(hash string) (*ipfsapi.ObjectStats, error) {
 	return im.shell.ObjectStat(hash)
 }
-
-// PatchLink is used to link two objects together
-// path really means the name of the link
-// create is used to specify whether intermediary nodes should be generated
-func (im *IpfsManager) PatchLink(root, path, childHash string, create bool) (string, error) {
-	return im.shell.PatchLink(root, path, childHash, create)
-}
-
-// AppendData is used to modify the raw data within an object, to a max of 1MB
-// Anything larger than 1MB will not be respected by the rest of the network
-func (im *IpfsManager) AppendData(root string, data interface{}) (string, error) {
-	return im.shell.PatchData(root, false, data)
-}
-
-// SetData is used to set the data field of an ipfs object
-func (im *IpfsManager) SetData(root string, data interface{}) (string, error) {
-	return im.shell.PatchData(root, true, data)
-}
-
-// NewObject is used to create a generic object from a template type
-func (im *IpfsManager) NewObject(template string) (string, error) {
-	return im.shell.NewObject(template)
-}
