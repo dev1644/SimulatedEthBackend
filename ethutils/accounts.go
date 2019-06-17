@@ -1,7 +1,6 @@
 package ethutils
 
 import (
-	"context"
 	"crypto/ecdsa"
 	"log"
 	"math/big"
@@ -12,7 +11,6 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 func SimlatingClient(privateKey string) *backends.SimulatedBackend {
@@ -75,14 +73,4 @@ func DeriveAddress(privateKey string) string {
 	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex()
 
 	return address
-}
-
-func FetchBalance(privateKey string, client *ethclient.Client) *big.Int {
-	address := DeriveAddress(privateKey)
-	account := common.HexToAddress(address)
-	balance, err := client.BalanceAt(context.Background(), account, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return balance
 }

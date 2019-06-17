@@ -2,14 +2,12 @@ package ethutils
 
 import (
 	challenge "Go-Assignment/Contract"
-	"fmt"
 	"log"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/ethereum/go-ethereum/ethclient"
 )
 
 func createSession(instance *challenge.Challenge, auth *bind.TransactOpts) *challenge.ChallengeSession {
@@ -29,7 +27,7 @@ func createSession(instance *challenge.Challenge, auth *bind.TransactOpts) *chal
 	return session
 }
 
-func Deploy(privateKey string, client *backends.SimulatedBackend) (*challenge.ChallengeSession, *types.Transaction) {
+func Deploy(privateKey string, client *backends.SimulatedBackend) (*challenge.ChallengeSession, common.Address, *types.Transaction) {
 
 	auth := bind.NewKeyedTransactor(LoadPrivateKey(privateKey))
 	// auth.Nonce = big.NewInt(int64(nonce))
@@ -44,21 +42,5 @@ func Deploy(privateKey string, client *backends.SimulatedBackend) (*challenge.Ch
 	}
 
 	session := createSession(instance, auth)
-
-	fmt.Println("New Contract Address", address.Hex()) // 0x147B8eb97fD247D06C4006D269c90C1908Fb5D54
-	return session, tx
-}
-
-func Load(address string, privateKey string, client *ethclient.Client) *challenge.ChallengeSession {
-
-	auth := bind.NewKeyedTransactor(LoadPrivateKey(privateKey))
-
-	instance, err := challenge.NewChallenge(common.HexToAddress(address), client)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	session := createSession(instance, auth)
-
-	return session
+	return session, address, tx
 }
