@@ -1,16 +1,14 @@
 package main
 
 import (
-	"Go-Assignment/ethutils"
-	utils "Go-Assignment/ethutils"
-	"Go-Assignment/ipfsutils"
 	"context"
 	"fmt"
 	"log"
 	"math/big"
 	"time"
 
-	ipfs "Go-Assignment/ipfsutils"
+	"SimulatedEthBackend/ethutils"
+	"SimulatedEthBackend/ipfsutils"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
 	"github.com/ethereum/go-ethereum/common"
@@ -73,7 +71,7 @@ func main() {
 	// defer deleteFiles()
 
 	privateKey := ethutils.NewPrivateKey()
-	addr := utils.DeriveAddress(privateKey)
+	addr := ethutils.DeriveAddress(privateKey)
 	fmt.Println("Account Address", addr)
 
 	client := ethutils.SimlatingClient(privateKey)
@@ -83,7 +81,7 @@ func main() {
 
 	challSession, contractAddr, tx := ethutils.Deploy(privateKey, client)
 	fmt.Println("New Contract Address", contractAddr.Hex())
-	ipfsManager, err := ipfs.NewManager("localhost:5001", time.Second)
+	ipfsManager, err := ipfsutils.NewManager("localhost:5001", time.Second)
 
 	if err != nil {
 		log.Fatal("Having error connecting with IPFS", err)

@@ -1,7 +1,7 @@
 package ethutils
 
 import (
-	challenge "Go-Assignment/Contract"
+	challenge "SimulatedEthBackend/Contract"
 	"log"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"Go-Assignment/ethutils"
-	ipfs "Go-Assignment/ipfsutils"
+	"SimulatedEthBackend/ethutils"
+	ipfs "SimulatedEthBackend/ipfsutils"
 	"fmt"
 	"math/big"
 	"testing"
